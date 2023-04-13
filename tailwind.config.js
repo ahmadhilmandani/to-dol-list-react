@@ -17,6 +17,8 @@ export default {
         'Cust-Dark-Grayish-Blue': 'hsl(234, 11%, 52%)',
         'Cust-Very-Dark-Grayish-Blue': 'hsl(233, 14%, 35%)',
         'Cust-Very-Dark-Grayish-Blue': 'hsl(237, 14%, 26%)',
+        'Cust-Very-Pastel-Blue': 'hsl(228, 100%, 84%)',
+        'Cust-Very-Light-Blue': 'hsl(206, 94%, 87%)',
       }
     },
   },
