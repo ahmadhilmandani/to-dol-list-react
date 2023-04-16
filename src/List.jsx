@@ -7,16 +7,24 @@ export function List(props) {
             {
                 props.list.map((list, index) => {
                     return (
-                        <div className='px-3 py-3 lg:px-5 lg:py-4 flex justify-between items-center text-xs md:text-base text-white border-b border-b-Cust-Very-Dark-Grayish-Blue' id={index}>
+                        <div className='px-3 py-3 lg:px-5 lg:py-4 flex justify-between items-center text-xs md:text-base text-white border-b border-b-Cust-Very-Dark-Grayish-Blue' key={index}>
                             <div className='flex gap-3 items-center'>
-                                <div className={`w-[16px] h-[16px] lg:w-[20px] lg:h-[20px] rounded-full overflow-hidden flex justify-center items-center ${list.done ? 'bg-gradient-to-r from-Cust-Sky-Blue to-Cust-Purple' : 'border'}`} >
+                                <div className={`w-[16px] h-[16px] lg:w-[24px] lg:h-[24px] rounded-full overflow-hidden flex justify-center items-center ${list.done ? 'bg-gradient-to-r from-Cust-Sky-Blue to-Cust-Purple' : 'border hover:translate-y-[-5px] transition ease-in-out duration-100'}`}
+                                    onClick={() => {
+                                        props.showDone(index)
+                                    }
+                                    }
+                                >
                                     {list.done &&
                                         <img src={iconCheck} alt="icon check" />
                                     }
                                 </div>
                                 <p className={list.done == true ? 'line-through text-Cust-Dark-Grayish-Blue' : ''} >{list.work}</p>
                             </div>
-                            <img src={iconX} alt="" className='w-[12px] h-[12px] lg:w-[16px] lg:h-[16px]' />
+                            <img src={iconX} alt="" className='w-[12px] h-[12px] lg:w-[16px] lg:h-[16px]'
+                                onClick={() => {
+                                    props.removeList(index)
+                                }} />
                         </div>
                     )
                 })
