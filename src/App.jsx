@@ -17,6 +17,7 @@ function App() {
 
     ]
   )
+  const [drag, setdrag] = useState(null)
   const [counter, setCounter] = useState(0)
   const [category, setCategory] = useState('all')
 
@@ -26,6 +27,20 @@ function App() {
     setList([...list, { work: listName, done: false }])
   }
 
+  const onDragReorder = (event, paramIndexKey) => {
+    event.preventDefault()
+    // console.log(paramIndexKey)
+    setdrag(paramIndexKey)
+  }
+  const onDropReorder = (event, paramIndex) => {
+    event.preventDefault()
+    // console.log(paramIndex)
+    let NewArrList = list
+    let DroppedList = NewArrList[paramIndex]
+    NewArrList[paramIndex] = NewArrList[drag]
+    NewArrList[drag] = DroppedList
+    setList(NewArrList);
+  }
 
   return (
     <div className='w-full min-h-screen flex justify-center gap-5  relative px-6'>
@@ -46,57 +61,73 @@ function App() {
           </form>
           <div className='mt-5 rounded-md bg-Cust-Bg-Color'>
 
-            <List list={list}
-              category = {category}
-              showDone={(paramIndex) => {
-                const newArrList = list.map((list, index) => {
-                  if (index == paramIndex && list.done != true) {
-                    if (counter > 0) {
-                      setCounter(counter - 1)
-                    }
-                    return { work: list.work, done: true }
-                  }
-                  else {
-                    return list
-                  }
-                })
-                setList(newArrList)
-              }}
+            {list.map((mappedList, index) => {
+              return (
+                <List
 
-              removeList={(paramIndex) => {
-                const newArrList = list.filter((list, index) => {
-                  if (paramIndex != index) {
-                    if (counter > 0) {
-                      setCounter(counter - 1)
-                    }
-                    return list
-                  }
-                })
-                setList(newArrList)
-              }}
-            />
+                  key={index}
+                  index={index}
+                  list={mappedList}
+                  category={category}
+                  setDone={(paramIndex) => {
+                    const newArrList = list.map((list, index) => {
+                      if (index == paramIndex && list.done != true) {
+                        if (counter > 0) {
+                          setCounter(counter - 1)
+                        }
+                        return { work: list.work, done: true }
+                      }
+                      else {
+                        return list
+                      }
+                    })
+                    setList(newArrList)
+                  }}
+                  removeList={(paramIndex) => {
+                    const newArrList = list.filter((list, index) => {
+                      if (paramIndex != index) {
+                        if (counter > 0) {
+                          setCounter(counter - 1)
+                        }
+                        return list
+                      }
+                    })
+                    setList(newArrList)
+                  }}
+                />
+              )
+            })}
+
 
             <div className='flex justify-between px-3 py-3 text-Cust-Dark-Grayish-Blue text-[10px]'>
               <div>{counter} items left</div>
-              <a onClick={(e)=>{
-                e.preventDefault()
-                setCategory('all')
-              }}>All</a>
-              <a onClick={(e)=>{
-                e.preventDefault()
-                setCategory('active')
-              }}>Active</a>
-              <a onClick={(e)=>{
-                e.preventDefault()
-                setCategory('complete')
-              }}>Complete</a>
-              <a onClick={(e)=>{
-                e.preventDefault()
-                setCategory('all')
-                setList([])
-                setListName('')
-                setCounter(0)
-              }}>Clear Complete</a>
+              <a
+                className='cursor-pointer'
+                onClick={(e) => {
+                  e.preventDefault()
+                  setCategory('all')
+                }}>All</a>
+              <a
+                className='cursor-pointer'
+                onClick={(e) => {
+                  e.preventDefault()
+                  setCategory('active')
+                }}>Active</a>
+              <a
+                className='cursor-pointer'
+                onClick={(e) => {
+                  e.preventDefault()
+                  setCategory('complete')
+                }}>Complete</a>
+              <a
+                className='cursor-pointer'
+                onClick={(e) => {
+                  e.preventDefault()
+                  setCategory('all')
+                  setList([])
+                  setListName('')
+                  setCounter(0)
+                }}>Clear Complete</a>
             </div>
           </div>
         </main>
