@@ -17,7 +17,7 @@ function App() {
 
     ]
   )
-  const [drag, setdrag] = useState(null)
+  const [drag, setDrag] = useState(null)
   const [counter, setCounter] = useState(0)
   const [category, setCategory] = useState('all')
 
@@ -29,17 +29,32 @@ function App() {
 
   const onDragReorder = (event, paramIndexKey) => {
     event.preventDefault()
-    // console.log(paramIndexKey)
-    setdrag(paramIndexKey)
+    console.log(paramIndexKey)
+    event.dataTransfer.setData("text/plain", paramIndexKey);
+    event.dataTransfer.effectAllowed = "move";
+    setDrag(paramIndexKey)
   }
-  const onDropReorder = (event, paramIndex) => {
+  const onDropReorder = (event, paramIndexKey) => {
     event.preventDefault()
+    console.log("masuk pak")
     // console.log(paramIndex)
-    let NewArrList = list
-    let DroppedList = NewArrList[paramIndex]
-    NewArrList[paramIndex] = NewArrList[drag]
-    NewArrList[drag] = DroppedList
-    setList(NewArrList);
+    // let NewArrList = list
+    // let DroppedList = NewArrList[paramIndex]
+    // NewArrList[paramIndex] = NewArrList[drag]
+    // NewArrList[drag] = DroppedList
+    // setList(NewArrList);
+
+
+    console.log(paramIndexKey)
+    const sourceIndex = event.dataTransfer.getData("text/plain");
+    const tempItems = [...list];
+    const [removed] = tempItems.splice(sourceIndex, 1);
+    tempItems.splice(paramIndexKey, 0, removed);
+    setList(tempItems);
+    // setDragOverIndex(null);
+  }
+  const handleDragOver = (event) => {
+    event.preventDefault()
   }
 
   return (
@@ -51,7 +66,7 @@ function App() {
           <h1 className='text-white font-semibold text-3xl tracking-widest'>TODO</h1>
           {lightMode == true ? <img src={iconSun} alt="" /> : <img src={iconMoon} alt='' />}
         </header>
-        <main className='mt-5'>
+        <main className='mt-5' >
           <form method="post" onSubmit={addList} id='form-list'>
             <input type="text" className='w-full px-3 py-3 rounded-md bg-Cust-Bg-Color text-white'
               onChange={
@@ -59,8 +74,8 @@ function App() {
                   setListName(e.target.value)
                 }} />
           </form>
-          <div className='mt-5 rounded-md bg-Cust-Bg-Color'>
 
+          <div className='mt-5 rounded-md bg-Cust-Bg-Color' >
             {list.map((mappedList, index) => {
               return (
                 <List
@@ -94,6 +109,17 @@ function App() {
                     })
                     setList(newArrList)
                   }}
+                  onDragReorder={(e) => {
+                    onDragReorder(e, index)
+                  }}
+                  onDropReorder={
+                    (e) => {
+                      onDropReorder(e, index)
+                    }}
+                  on
+                  onHandleDragOver={
+                    handleDragOver
+                  }
                 />
               )
             })}

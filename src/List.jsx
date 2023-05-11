@@ -8,7 +8,7 @@ export function List(props) {
 
     if (props.category === 'all') {
         return (
-            <div className='px-3 py-3 lg:px-5 lg:py-4 flex justify-between items-center text-xs md:text-base text-white border-b border-b-Cust-Very-Dark-Grayish-Blue' draggable>
+            <div className='px-3 py-3 lg:px-5 lg:py-4 flex justify-between items-center text-xs md:text-base text-white border-b border-b-Cust-Very-Dark-Grayish-Blue' draggable onDrag={props.onDragReorder} onDragOver={props.onHandleDragOver} onDrop={props.onDropReorder}>
                 <div className='flex gap-3 items-center'>
                     <div
                         className={`w-[16px] h-[16px] lg:w-[24px] lg:h-[24px] rounded-full overflow-hidden flex justify-center items-center ${props.list.done ? 'bg-gradient-to-r from-Cust-Sky-Blue to-Cust-Purple' : 'border hover:translate-y-[-5px] cursor-pointer transition ease-in-out duration-100'}`}
