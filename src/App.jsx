@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 
 import { List } from './List'
@@ -20,6 +20,7 @@ function App() {
   const [drag, setDrag] = useState(null)
   const [counter, setCounter] = useState(0)
   const [category, setCategory] = useState('all')
+  const [theme, setTheme] = useState(null);
 
   const addList = (e) => {
     e.preventDefault()
@@ -29,33 +30,47 @@ function App() {
 
   const onDragReorder = (event, paramIndexKey) => {
     event.preventDefault()
-    console.log(paramIndexKey)
-    event.dataTransfer.setData("text/plain", paramIndexKey);
-    event.dataTransfer.effectAllowed = "move";
     setDrag(paramIndexKey)
   }
   const onDropReorder = (event, paramIndexKey) => {
     event.preventDefault()
-    console.log("masuk pak")
-    // console.log(paramIndex)
-    // let NewArrList = list
-    // let DroppedList = NewArrList[paramIndex]
-    // NewArrList[paramIndex] = NewArrList[drag]
-    // NewArrList[drag] = DroppedList
-    // setList(NewArrList);
+    const sourceIndex = drag;
 
+    if (isNaN(sourceIndex) || isNaN(paramIndexKey)) {
+      return;
+    }
 
-    console.log(paramIndexKey)
-    const sourceIndex = event.dataTransfer.getData("text/plain");
     const tempItems = [...list];
     const [removed] = tempItems.splice(sourceIndex, 1);
     tempItems.splice(paramIndexKey, 0, removed);
     setList(tempItems);
-    // setDragOverIndex(null);
   }
+
+
   const handleDragOver = (event) => {
     event.preventDefault()
   }
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setTheme('dark');
+    }
+    else {
+      setTheme('light');
+    }
+  }, [])
+
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
+
+  const handleThemeSwitch = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
     <div className='w-full min-h-screen flex justify-center gap-5  relative px-6'>
@@ -64,7 +79,7 @@ function App() {
       <div className='lg:w-full max-w-[480px] w-[90%] mt-20 lg:mt-24 mb-10 lg:mb-16'>
         <header className='flex justify-between items-center'>
           <h1 className='text-white font-semibold text-3xl tracking-widest'>TODO</h1>
-          {lightMode == true ? <img src={iconSun} alt="" /> : <img src={iconMoon} alt='' />}
+          {lightMode == true ? <img className='cursor-pointer' src={iconSun} alt="" onClick={handleThemeSwitch} /> : <img className='cursor-pointer' src={iconMoon} alt='' onClick={handleThemeSwitch} />}
         </header>
         <main className='mt-5' >
           <form method="post" onSubmit={addList} id='form-list'>
@@ -75,7 +90,7 @@ function App() {
                 }} />
           </form>
 
-          <div className='mt-5 rounded-md bg-Cust-Bg-Color' >
+          <div className='mt-5 rounded-md bg-white dark:bg-Cust-Bg-Color' >
             {list.map((mappedList, index) => {
               return (
                 <List
